@@ -17,7 +17,7 @@ import React from 'react'
 import { Entity } from '@backstage/catalog-model'
 import { CodeSnippet } from '@backstage/core-components'
 import { Button, Grid, Typography } from '@material-ui/core'
-import KwirthComponentNotFound from '../../assets/kwirth-log-component-not-found.svg'
+import KwirthComponentNotFound from '../assets/kwirth-component-not-found.svg'
 import { ANNOTATION_BACKSTAGE_KUBERNETES_LABELID, ANNOTATION_BACKSTAGE_KUBERNETES_LABELSELECTOR } from '@jfvilas/plugin-kwirth-common'
 
 enum ErrorType {

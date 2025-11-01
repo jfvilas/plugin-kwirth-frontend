@@ -1,3 +1,18 @@
+/*
+Copyright 2025 Julio Fernandez
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 import React, { useState } from 'react'
 import { FormControl, Select, MenuItem, Checkbox, Chip, Grid, ListItemText } from '@material-ui/core'
 import { ClusterValidPods, getContainerList, getPodList } from '@jfvilas/plugin-kwirth-common'
@@ -9,6 +24,7 @@ interface IProps {
     selectedNamespaces: string[],
     selectedPodNames: string[],
     selectedContainerNames: string[],
+    scope: InstanceConfigScopeEnum,
     disabled: boolean
 }
 
@@ -55,17 +71,27 @@ const ObjectSelector = (props: IProps) => {
         props.onSelect([...props.selectedNamespaces], [...props.selectedPodNames], [...props.selectedContainerNames])
     }
 
+    // const existAccessKey = (namespace:string) => {
+    //     if (!props.cluster.accessKeys.has(InstanceConfigScopeEnum.VIEW)) return false
+    //     let accessKey = props.cluster.accessKeys.get(InstanceConfigScopeEnum.VIEW)
+    //     if (accessKey) {
+    //         let resources = parseResources(accessKey.resources)
+    //         return (resources.find(resource => resource.namespaces === namespace))
+    //     }
+    //     else return false
+
+    // }
     const existAccessKey = (namespace:string) => {
-        if (!props.cluster.accessKeys.has(InstanceConfigScopeEnum.VIEW)) return false
-        let accessKey = props.cluster.accessKeys.get(InstanceConfigScopeEnum.VIEW)
+        if (!props.cluster.accessKeys.has(props.scope)) return false
+        let accessKey = props.cluster.accessKeys.get(props.scope)
         if (accessKey) {
             let resources = parseResources(accessKey.resources)
-            return (resources.find(resource => resource.namespaces === namespace))
+            return (resources.find(r => r.namespaces === namespace))
         }
         else return false
 
     }
-
+    
     return (
         <Grid container direction='column' spacing={0} style={{marginBottom:6, width:'100%'}}>
             <Grid item>
