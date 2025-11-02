@@ -1,13 +1,13 @@
 {
   "name": "@jfvilas/plugin-kwirth-frontend",
-  "version": "0.12.9",
+  "version": "0.13.0",
   "description": "Frontend common artifacts for viewing real-time Kubernetes logs in Backstage",
   "keywords": [
     "Backstage",
     "Kubernetes",
-    "log",
-    "observability",
     "Kwirth",
+    "observability",
+    "log",
     "plugin",
     "metrics"
   ],
