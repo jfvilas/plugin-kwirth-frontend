@@ -21,15 +21,16 @@ import { versionGreaterThan } from '@jfvilas/kwirth-common'
 interface IProps {
     backendVersion: string
     latestVersions?: IBackendInfo
+    ownVersion: string
 }
 
-const KwirthNews = (props: IProps) => {
+const KwirthNews: React.FC<IProps> = (props: IProps) => {
 
     let news:string[] = []
     try {
         if (props.latestVersions) {
-            if (versionGreaterThan(props.latestVersions['plugin-kwirth-backend'], props.backendVersion)) news.push(`New version of 'plugin-kwirth-backend': your have ${props.backendVersion} and latest is ${props.latestVersions['plugin-kwirth-backend']}`)
-            //if (versionGreaterThan(props.latestVersions['plugin-kwirth-log'], VERSION)) news.push(`New version of 'plugin-kwirth-log': your have ${VERSION} and latest is ${props.latestVersions['plugin-kwirth-log']}`)
+            if (versionGreaterThan(props.latestVersions['plugin-kwirth-backend'], props.backendVersion)) news.push(`New version of 'plugin-kwirth-backend': you have ${props.backendVersion} and latest is ${props.latestVersions['plugin-kwirth-backend']}`)
+            if (versionGreaterThan(props.latestVersions['plugin-kwirth-log'], props.ownVersion)) news.push(`New version of 'plugin-kwirth-log': you have ${props.ownVersion} and latest is ${props.latestVersions['plugin-kwirth-log']}`)
         }
     }
     catch {
@@ -38,17 +39,15 @@ const KwirthNews = (props: IProps) => {
     if (news.length===0) return <></>
     
     return (<>
-        <CardHeader title={'Kwirth news'}/>
-        <Divider style={{marginTop:8}}/>
-        <Grid container direction='column' spacing={0}>
+        <CardHeader title={'Kwirth news'} style={{backgroundColor: '#e0e0e0'}}/>
+        <Divider/>
+        <Grid container direction='column' spacing={0} style={{backgroundColor:'lightgray'}}>
             <Grid item style={{padding:4}}>
                 {
                     news.map(n => {
                         return <Typography style={{fontSize:11, marginBottom:6}}>{n}</Typography>
                     })
                 }
-
-                <Typography style={{fontSize:9, marginLeft:20, marginTop:4, marginBottom:6}}>Powered by <a href='https://jfvilas.github.io/kwirth/' target='_blank' style={{color:'blue'}}>Kwirth</a></Typography>
             </Grid>
         </Grid>
     </>)
