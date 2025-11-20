@@ -16,7 +16,7 @@ limitations under the License.
 import React, { useState } from 'react'
 import { FormControl, Select, MenuItem, Checkbox, Chip, Grid, ListItemText } from '@material-ui/core'
 import { ClusterValidPods, getContainerList, getPodList } from '@jfvilas/plugin-kwirth-common'
-import { InstanceConfigScopeEnum, parseResources } from '@jfvilas/kwirth-common'
+import { parseResources } from '@jfvilas/kwirth-common'
 
 interface IProps {
     onSelect: (namespaces:string[], podNames:string[], containerNames:string[]) => void,
@@ -24,7 +24,8 @@ interface IProps {
     selectedNamespaces: string[],
     selectedPodNames: string[],
     selectedContainerNames: string[],
-    scope: InstanceConfigScopeEnum,
+    excludeCotainers?: string[],
+    scope: string,
     disabled: boolean
 }
 
@@ -45,7 +46,7 @@ const ObjectSelector = (props: IProps) => {
         props.selectedPodNames.push( ...validPods.map(pod => pod.name) )
 
         props.selectedContainerNames.splice(0,props.selectedContainerNames.length)
-        let containers = getContainerList(pods, props.selectedNamespaces, props.selectedPodNames)
+        let containers = getContainerList(pods, props.selectedNamespaces, props.selectedPodNames, props.excludeCotainers || [])
         props.selectedContainerNames.push(...containers)
         props.onSelect([...props.selectedNamespaces], [...props.selectedPodNames], [...props.selectedContainerNames])
 
@@ -57,7 +58,7 @@ const ObjectSelector = (props: IProps) => {
         props.selectedPodNames.push( ...event.target.value )
 
         props.selectedContainerNames.splice(0,props.selectedContainerNames.length)
-        let containers = getContainerList(pods, props.selectedNamespaces, props.selectedPodNames)
+        let containers = getContainerList(pods, props.selectedNamespaces, props.selectedPodNames, props.excludeCotainers || [])
         if (containers.length===1) props.selectedContainerNames.push(...containers)
 
         props.onSelect([...props.selectedNamespaces], [...props.selectedPodNames], [...props.selectedContainerNames])
@@ -71,16 +72,6 @@ const ObjectSelector = (props: IProps) => {
         props.onSelect([...props.selectedNamespaces], [...props.selectedPodNames], [...props.selectedContainerNames])
     }
 
-    // const existAccessKey = (namespace:string) => {
-    //     if (!props.cluster.accessKeys.has(InstanceConfigScopeEnum.VIEW)) return false
-    //     let accessKey = props.cluster.accessKeys.get(InstanceConfigScopeEnum.VIEW)
-    //     if (accessKey) {
-    //         let resources = parseResources(accessKey.resources)
-    //         return (resources.find(resource => resource.namespaces === namespace))
-    //     }
-    //     else return false
-
-    // }
     const existAccessKey = (namespace:string) => {
         if (!props.cluster.accessKeys.has(props.scope)) return false
         let accessKey = props.cluster.accessKeys.get(props.scope)
@@ -89,7 +80,6 @@ const ObjectSelector = (props: IProps) => {
             return (resources.find(r => r.namespaces === namespace))
         }
         else return false
-
     }
     
     return (
@@ -131,9 +121,9 @@ const ObjectSelector = (props: IProps) => {
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl size='small' fullWidth>
-                        <Select value={props.selectedContainerNames} MenuProps={{variant:'menu'}} multiple onChange={onSelectContainer} renderValue={(selected) => (selected as string[]).join(', ')} disabled={props.disabled || props.selectedPodNames.length===0 || getContainerList(pods, props.selectedNamespaces, props.selectedPodNames).length===1}>
+                        <Select value={props.selectedContainerNames} MenuProps={{variant:'menu'}} multiple onChange={onSelectContainer} renderValue={(selected) => (selected as string[]).join(', ')} disabled={props.disabled || props.selectedPodNames.length===0 || getContainerList(pods, props.selectedNamespaces, props.selectedPodNames, props.excludeCotainers || []).length<2}>
                             {
-                                getContainerList(pods, props.selectedNamespaces, props.selectedPodNames).map(container => {
+                                getContainerList(pods, props.selectedNamespaces, props.selectedPodNames, props.excludeCotainers || []).map(container => {
                                     return (
                                         <MenuItem key={container} value={container}>
                                             <Checkbox checked={props.selectedContainerNames.includes(container)} />

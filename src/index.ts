@@ -1,4 +1,4 @@
-export const VERSION='0.13.2'
+export const VERSION='0.13.4'
 
 export * from './ComponentNotFound'
 export * from './ObjectSelector'

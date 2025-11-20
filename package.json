@@ -1,6 +1,6 @@
 {
   "name": "@jfvilas/plugin-kwirth-frontend",
-  "version": "0.13.4",
+  "version": "0.13.5",
   "description": "Frontend common artifacts for viewing real-time Kubernetes logs in Backstage",
   "keywords": [
     "Backstage",
@@ -89,3 +89,4 @@
     "react-router-dom": "6.0.0-beta.0 || ^6.3.0"
   }
 }
+
